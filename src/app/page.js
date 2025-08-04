@@ -1,12 +1,14 @@
 'use client'
 
 import { useState } from 'react'
-import { mockEvents, tierHierarchy, tierColors } from '@/data/mockData'
+import { mockEvents, tierHierarchy } from '@/data/mockData'
 import EventCard from '@/components/EventCard'
+import Header from '@/components/Header'
 
 export default function Home() {
-  const [userTier, setUserTier] = useState('gold') // Mock user tier
+  const [userTier] = useState('gold') // Mock user tier (removed setUserTier)
   const [selectedFilter, setSelectedFilter] = useState('all')
+
 
   // Filter events based on user tier and selected filter
   const getFilteredEvents = () => {
@@ -34,30 +36,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex justify-between items-center">
-            <div className="flex items-center space-x-2">
-              <h1 className="text-2xl font-bold text-gray-900">Eventify</h1>
-              <span className="text-sm text-gray-500">Events</span>
-            </div>
-            <div className="flex items-center space-x-4">
-              <span className="text-sm text-gray-600">Your tier:</span>
-              <select
-                value={userTier}
-                onChange={(e) => setUserTier(e.target.value)}
-                className={`px-3 py-1 rounded-full text-sm font-medium capitalize border-0 ${tierColors[userTier]}`}
-              >
-                <option value="free">Free</option>
-                <option value="silver">Silver</option>
-                <option value="gold">Gold</option>
-                <option value="platinum">Platinum</option>
-              </select>
-            </div>
-          </div>
-        </div>
-      </header>
+      <Header pageTitle="Events" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Filters */}
@@ -104,23 +83,10 @@ export default function Home() {
           </div>
         )}
 
-        {/* Tier Info */}
-        <div className="mt-12 bg-white rounded-lg shadow-sm p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Tier Access Information</h2>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            {Object.entries(tierHierarchy).map(([tier, access]) => (
-              <div key={tier} className={`p-4 rounded-lg border-2 ${userTier === tier ? 'border-blue-500 bg-blue-50' : 'border-gray-200'}`}>
-                <h3 className={`font-medium capitalize mb-2 ${tierColors[tier].split(' ')[1]}`}>
-                  {tier} Tier
-                </h3>
-                <p className="text-sm text-gray-600">
-                  Access to: {access.join(', ')} events
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
+
       </div>
+
+
     </div>
   )
 }
