@@ -1,29 +1,51 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 import { pricingPlans } from '@/data/mockData'
 import PricingCard from '@/components/PricingCard'
-import Header from '@/components/Header'
-import TierDisplay from '@/components/TierDisplay'
+import { useUserTier } from '@/hooks/useUserTier'
 
 export default function PricingPage() {
-  const [currentTier] = useState('gold') // Mock current tier
+  const { tier: currentTier, updateTier} = useUserTier()
+  const [upgrading, setUpgrading] = useState(false)
   
-  const handleSelectPlan = (tier) => {
-    console.log('Selected plan:', tier)
-    // Add plan selection logic here
+  const handleSelectPlan = async (selectedTier) => {
+    if (upgrading) return
+    
+    setUpgrading(true)
+    console.log('Upgrading to:', selectedTier)
+  
+    try {
+    
+      const success = await updateTier(selectedTier)
+      
+      if (success) {
+        alert(`Successfully upgraded to ${selectedTier} tier!`)
+      } else {
+        alert('Failed to upgrade. Please try again.')
+      }
+    } catch (error) {
+      console.error('Upgrade failed:', error)
+      alert('Upgrade failed. Please try again.')
+    } finally {
+      setUpgrading(false)
+    }
   }
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Header 
-        pageTitle="Pricing" 
-        showBackButton={true} 
-        backUrl="/" 
-        showUserControls={false}
-      />
-
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        {/* Back to Events Link */}
+        <div className="mb-8">
+          <Link
+            href="/"
+            className="inline-flex items-center text-blue-600 hover:text-blue-700 text-sm font-medium transition-colors"
+          >
+            ← Back to Events
+          </Link>
+        </div>
+
         {/* Hero Section */}
         <div className="text-center mb-12">
           <h2 className="text-4xl font-bold text-gray-900 mb-4">
@@ -32,9 +54,6 @@ export default function PricingPage() {
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
             Unlock exclusive events and premium features with our flexible pricing plans
           </p>
-          <div className="mt-6">
-            <TierDisplay tier={currentTier} label="Plan" />
-          </div>
         </div>
 
         {/* Pricing Cards */}
