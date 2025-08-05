@@ -9,9 +9,14 @@ export default function Home() {
   const { isSignedIn, isLoading } = useUserTier()
   const router = useRouter()
 
+  // Debug logging
+  console.log('Home page render:', { isSignedIn, isLoading })
+
   // Redirect authenticated users to events page
   useEffect(() => {
+    console.log('Effect running:', { isLoading, isSignedIn })
     if (!isLoading && isSignedIn) {
+      console.log('Redirecting to events...')
       router.push('/events')
     }
   }, [isSignedIn, isLoading, router])
