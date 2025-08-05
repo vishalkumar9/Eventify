@@ -23,7 +23,7 @@ export default function EventCard({ event, onRegister }) {
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
       <img
-        src={event.image_url}
+        src={event.imageUrl || event.image_url}
         alt={event.title}
         className="w-full h-48 object-cover"
       />
@@ -41,7 +41,7 @@ export default function EventCard({ event, onRegister }) {
         </p>
         <div className="flex justify-between items-center">
           <p className="text-sm text-gray-500">
-            {formatDate(event.event_date)}
+            {formatDate(event.eventDate || event.event_date)}
           </p>
           <button 
             onClick={handleRegister}
