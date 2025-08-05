@@ -19,11 +19,16 @@ export function useUserTier() {
         }
 
         if (user) {
-            // Try to get tier from localStorage first, then fallback to metadata
-            const tierKey = `user_tier_${user.id}`
-            const storedTier = localStorage.getItem(tierKey)
-            const userTier = storedTier || user.publicMetadata?.tier || 'free'
-            setTier(userTier)
+            // Only access localStorage on client side
+            if (typeof window !== 'undefined') {
+                const tierKey = `user_tier_${user.id}`
+                const storedTier = localStorage.getItem(tierKey)
+                const userTier = storedTier || user.publicMetadata?.tier || 'free'
+                setTier(userTier)
+            } else {
+                // Server side, use default
+                setTier('free')
+            }
         } else {
             // User not signed in, default to free
             setTier('free')
@@ -32,8 +37,10 @@ export function useUserTier() {
         setIsLoading(false)
     }, [user, isLoaded])
 
-    // Listen for tier updates from other components
+    // Listen for tier updates from other components (client side only)
     useEffect(() => {
+        if (typeof window === 'undefined') return
+
         const handleTierUpdate = (event) => {
             if (user && event.detail.userId === user.id) {
                 setTier(event.detail.newTier)
@@ -50,17 +57,20 @@ export function useUserTier() {
         try {
             setIsLoading(true)
             
-            // Store in localStorage
-            const tierKey = `user_tier_${user.id}`
-            localStorage.setItem(tierKey, newTier)
+            // Only access localStorage and window on client side
+            if (typeof window !== 'undefined') {
+                // Store in localStorage
+                const tierKey = `user_tier_${user.id}`
+                localStorage.setItem(tierKey, newTier)
+                
+                // Dispatch custom event to update all other components
+                window.dispatchEvent(new CustomEvent(TIER_UPDATE_EVENT, {
+                    detail: { userId: user.id, newTier }
+                }))
+            }
             
             // Update local state
             setTier(newTier)
-            
-            // Dispatch custom event to update all other components
-            window.dispatchEvent(new CustomEvent(TIER_UPDATE_EVENT, {
-                detail: { userId: user.id, newTier }
-            }))
             
             setIsLoading(false)
             return true

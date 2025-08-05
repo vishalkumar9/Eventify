@@ -1,8 +1,6 @@
 'use client'
 
 import {
-  SignInButton,
-  SignUpButton,
   SignedIn,
   SignedOut,
   UserButton,
@@ -31,10 +29,11 @@ export default function Navbar() {
     <header className="bg-white shadow-sm border-b">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
         <div className="flex justify-between items-center">
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-8">
             <Link href="/" className="text-2xl font-bold text-gray-900 hover:text-gray-700 transition-colors">
               Eventify
             </Link>
+
           </div>
 
           <div className="flex items-center space-x-4">
@@ -47,23 +46,18 @@ export default function Navbar() {
                 </span>
               </div>
 
-              {/* Upgrade Button - Only show if not platinum */}
-              {tier !== 'platinum' && (
-                <Link
-                  href="/pricing"
-                  className="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:from-purple-700 hover:to-blue-700 transition-all"
-                >
-                  Upgrade
-                </Link>
-              )}
+
+              <Link
+                href="/pricing"
+                className="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:from-purple-700 hover:to-blue-700 transition-all shadow-sm"
+              >
+                ⭐ Upgrade
+              </Link>
+
 
               {/* Clerk User Button */}
               <UserButton />
             </SignedIn>
-
-            <SignedOut>
-              {/* Empty space when signed out - sign-in/sign-up buttons are on the welcome page */}
-            </SignedOut>
           </div>
         </div>
       </div>

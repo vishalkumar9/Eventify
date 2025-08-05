@@ -1,0 +1,29 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum TierEnum {
+  free
+  silver
+  gold
+  platinum
+}
+
+model Event {
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title       String
+  description String
+  eventDate   DateTime  @map("event_date")
+  imageUrl    String    @map("image_url")
+  tier        TierEnum
+
+  @@map("events")
+}
